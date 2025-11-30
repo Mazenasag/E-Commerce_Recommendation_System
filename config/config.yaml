@@ -1,0 +1,7 @@
+# Configuration file for E-Commerce Recommender System
+
+# Data paths
+data:
+  raw_data_path: "data/raw/csv_for_case_study_V1.csv"
+  processed_data_path: "data/processed/processed_data.parquet"
+  train_test_split_ratio: 0.8
