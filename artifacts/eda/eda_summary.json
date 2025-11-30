@@ -1,0 +1,19 @@
+{
+  "Dataset Size": "500,000 rows \u00d7 11 columns",
+  "Total Users": "433,787",
+  "Total Products": "200,325",
+  "Total Interactions": "500,000",
+  "Date Range": "2022-10-01 00:03:06+00:00 to 2023-03-31 23:59:52+00:00",
+  "Missing Values": "133,074 (26.61%)",
+  "Sparsity": "100.00%",
+  "Warm Users": "49,359 (11.4%)",
+  "Cold Users": "384,428 (88.6%)",
+  "Unique Events": "5",
+  "Event Types": [
+    "purchased",
+    "cart",
+    "wishlist",
+    "rating",
+    "search_keyword"
+  ]
+}
