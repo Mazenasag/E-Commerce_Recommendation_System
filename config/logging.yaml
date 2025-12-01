@@ -1,0 +1,42 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  default:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  
+  detailed:
+    format: "%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: artifacts/training_logs/training.log
+    mode: a
+    encoding: utf-8
+
+loggers:
+  src:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  app:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, file]
+
