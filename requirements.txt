@@ -8,7 +8,7 @@ implicit>=0.7.2
 # Utilities
 python-json-logger==2.0.7
 # Stress Testing
-locust==2.17.0
+# locust==2.17.0
 # FastAPI and Server
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
