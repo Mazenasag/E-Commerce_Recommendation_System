@@ -62,6 +62,8 @@ if __name__ == "__main__":
 
     # Create DataIngestion instance
     ingestion = DataIngestion(config)
+    print("Loaded config:", config)
+
 
     # Load and validate data
     try:

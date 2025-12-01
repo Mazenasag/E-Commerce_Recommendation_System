@@ -5,3 +5,60 @@ data:
   raw_data_path: "data/raw/csv_for_case_study_V1.csv"
   processed_data_path: "data/processed/processed_data.parquet"
   train_test_split_ratio: 0.9
+
+
+
+
+# Model parameters
+model:
+  random_seed: 42
+  
+  # ALS (Collaborative Filtering) parameters
+  als:
+    factors: 64
+    regularization: 0.3
+    iterations: 30
+    alpha: 40  # Confidence scaling factor
+  
+  # TF-IDF + SVD parameters
+  embeddings:
+    max_features: 100
+    ngram_range: [1, 2]
+    min_df: 3
+    n_components: 50  # PCA/SVD components
+  
+  # FAISS parameters
+  faiss:
+    index_type: "IndexFlatL2"  # Options: IndexFlatL2, IndexIVFFlat
+
+# Event weights for scoring
+event_weights:
+  purchased: 5.0
+  cart: 3.0
+  rating: 2.5
+  wishlist: 2.0
+  search_keyword: 1.0
+
+# Recency decay
+recency:
+  decay_rate: 0.01  # Exponential decay rate
+
+# User segmentation
+user_segmentation:
+  warm_user_threshold: 2  # Users with 2+ interactions are "warm"
+
+# Artifacts paths
+artifacts:
+  base_path: "artifacts"
+  model_path: "artifacts/als_model.pkl"
+  embeddings_path: "artifacts/product_embeddings.npy"
+  faiss_index_path: "artifacts/faiss_index.bin"
+  tfidf_path: "artifacts/tfidf_vectorizer.pkl"
+  svd_path: "artifacts/svd_transformer.pkl"
+  id_mappings_path: "artifacts/id_mappings.json"
+  train_matrix_path: "artifacts/train_matrix.npz"
+  interaction_matrix_path: "artifacts/interaction_matrix.npz"
+  warm_user_info_path: "artifacts/warm_user_info.json"
+  product_to_users_lookup_path: "artifacts/product_to_users_lookup.json"
+  product_ids_list_path: "artifacts/product_ids_list.json"
+  config_path: "artifacts/config.json"
