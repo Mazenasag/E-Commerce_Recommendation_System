@@ -9,6 +9,8 @@ from typing import Dict, Set, Tuple
 from sklearn.preprocessing import LabelEncoder
 import sys
 from src.utils.logger import get_logger
+from src.utils.helpers import ensure_dir
+
 from src.utils.exception import CustomException
 
 logger = get_logger(__name__)
