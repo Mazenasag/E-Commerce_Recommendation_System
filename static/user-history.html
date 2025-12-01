@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User History - Recommendation System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👤 User Interaction History</h1>
+            <p class="subtitle">View all products and interactions for User ID: <span id="userIdDisplay"></span></p>
+        </header>
+
+        <div class="back-section">
+            <button onclick="goBack()" class="back-btn">
+                ← Back to Recommendations
+            </button>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div id="userStats" class="user-stats-card" style="display: none;">
+            <h3>User Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Total Interactions</div>
+                    <div class="stat-value" id="totalInteractions">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Unique Products</div>
+                    <div class="stat-value" id="uniqueProducts">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Event Types</div>
+                    <div class="stat-value" id="eventTypes">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="historySection" class="history-section" style="display: none;">
+            <div class="history-header">
+                <h2>Interaction History</h2>
+                <div class="filter-group">
+                    <label for="eventFilter">Filter by Event:</label>
+                    <select id="eventFilter" onchange="filterHistory()">
+                        <option value="all">All Events</option>
+                        <option value="purchased">Purchased</option>
+                        <option value="cart">Cart</option>
+                        <option value="rating">Rating</option>
+                        <option value="wishlist">Wishlist</option>
+                        <option value="search_keyword">Search</option>
+                    </select>
+                </div>
+            </div>
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading user history...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by FastAPI • Collaborative Filtering + Content-Based Recommendations</p>
+    </footer>
+
+    <script src="/static/user-history.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Recommendation System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛍️ E-Commerce Recommendation System</h1>
+            <p class="subtitle">Get user recommendations for any product using multiple AI models</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <label for="productId">Product ID</label>
+                <div class="input-group">
+                    <input 
+                        type="number" 
+                        id="productId" 
+                        placeholder="Enter product ID (e.g., 1, 2, 410...)" 
+                        min="1"
+                    >
+                    <button id="searchBtn" onclick="searchRecommendations()" class="primary-btn">
+                        <span class="btn-text">🚀 Get Recommendations</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner-small"></span> Loading...
+                        </span>
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label for="numResults" class="inline-label">Number of Results:</label>
+                    <select id="numResults">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div id="resultsSection" class="results-section" style="display: none;">
+            <div class="results-header">
+                <div class="header-content">
+                    <h2>Recommendations for Product ID: <span id="resultProductId" class="highlight">-</span></h2>
+                    <div class="stats-bar">
+                        <span id="totalRecommendations" class="stat-badge">0 recommendations</span>
+                    </div>
+                </div>
+                
+                <!-- Toggle for Other Methods -->
+                <div class="method-toggle-section">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="showOtherMethods" onchange="toggleOtherMethods()">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">Compare with Other Methods</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Hybrid Model - Full Width First (Always Visible) -->
+            <div class="hybrid-model-section">
+                <div class="model-card featured">
+                    <div class="model-header">
+                        <div class="model-title-group">
+                            <h3>🔀 Hybrid Model</h3>
+                            <span class="model-badge recommended">⭐ Recommended</span>
+                        </div>
+                        <div class="model-performance">
+                            <span class="performance-indicator">Best Performance</span>
+                        </div>
+                    </div>
+                    <div class="model-description">
+                        <p>Combines <strong>ALS (40%)</strong> + <strong>Content-Based (60%)</strong> for optimal accuracy and coverage</p>
+                    </div>
+                    <div id="hybridResults" class="recommendations-list"></div>
+                </div>
+            </div>
+
+            <!-- Other Three Models - Below Hybrid (Toggleable) -->
+            <div id="otherMethodsSection" class="other-methods-section" style="display: none;">
+                <div class="section-divider">
+                    <span>Alternative Methods</span>
+                </div>
+                <div class="models-grid">
+                    <!-- ALS Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>🤝 Collaborative Filtering (ALS)</h3>
+                            <span class="model-badge">Warm Users</span>
+                        </div>
+                        <div class="model-description">
+                            Matrix factorization for users with 2+ interactions
+                        </div>
+                        <div id="alsResults" class="recommendations-list"></div>
+                    </div>
+
+                    <!-- Content-Based Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>📝 Content-Based</h3>
+                            <span class="model-badge">Similar Products</span>
+                        </div>
+                        <div class="model-description">
+                            Finds users who interacted with similar products using embeddings
+                        </div>
+                        <div id="contentResults" class="recommendations-list"></div>
+                    </div>
+
+                    <!-- Popularity Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>⭐ Popularity Baseline</h3>
+                            <span class="model-badge">Global</span>
+                        </div>
+                        <div class="model-description">
+                            Recommends globally most active users
+                        </div>
+                        <div id="popularityResults" class="recommendations-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ## Similar Products Section - COMMENTED OUT FOR PERFORMANCE
+            <div class="similar-products-section">
+                <div class="section-header">
+                    <h3>🔍 Similar Products</h3>
+                    <p class="section-subtitle">Products with similar characteristics</p>
+                </div>
+                <div id="similarProducts" class="similar-products-list"></div>
+            </div>
+            -->
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading recommendations...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by FastAPI • Collaborative Filtering + Content-Based Recommendations</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
+
