@@ -55,6 +55,7 @@ class ModelTrainer:
     def create_product_embeddings(self, product_info: pd.DataFrame) -> Tuple[np.ndarray, TfidfVectorizer, TruncatedSVD]:
         """
         Create product embeddings using TF-IDF + SVD
+        EXACTLY matches model_build.ipynb notebook implementation
         
         Args:
             product_info: DataFrame with product_id and cleaned_text columns
@@ -65,21 +66,32 @@ class ModelTrainer:
         try:
             logger.info("🔄 Creating product embeddings...")
             
-            # Prepare text data
+            # EXACTLY match notebook: drop duplicates and dropna first
+            # Notebook does: product_info = df[['product_id', 'cleaned_text']].drop_duplicates(subset=['product_id'])
+            #                product_info = product_info.dropna(subset=['cleaned_text'])
+            product_info = product_info.drop_duplicates(subset=['product_id'])
+            product_info = product_info.dropna(subset=['cleaned_text'])
+            
+            logger.info(f"   📊 Products with cleaned text: {len(product_info):,}")
+            
+            # Prepare text data - EXACTLY match notebook
+            # Notebook uses: product_info['cleaned_text'].fillna('').astype(str)
+            # But since we already dropna, we just need to ensure it's string
             texts = product_info['cleaned_text'].fillna('').astype(str)
             
-            # TF-IDF vectorization
+            # TF-IDF vectorization - EXACTLY match notebook parameters
+            # Notebook: max_features=100, ngram_range=(1, 2), min_df=3, stop_words=None, dtype=np.float32
             logger.info("   Creating TF-IDF vectors...")
             tfidf = TfidfVectorizer(
-                max_features=self.max_features,
-                ngram_range=self.ngram_range,
-                min_df=self.min_df,
-                stop_words=None,
-                dtype=np.float32
+                max_features=self.max_features,        # 100 (from config)
+                ngram_range=self.ngram_range,          # (1, 2) (from config)
+                min_df=self.min_df,                    # 3 (from config)
+                stop_words=None,                       # Keep all words (handles Arabic too)
+                dtype=np.float32                       # Use float32 instead of float64 (saves 50% memory)
             )
             
             product_embeddings_tfidf = tfidf.fit_transform(texts)
-            logger.info(f"   ✅ TF-IDF shape: {product_embeddings_tfidf.shape}")
+            logger.info(f"   ✅ TF-IDF shape: {product_embeddings_tfidf.shape} (sparse)")
             
             # Get actual number of features and documents
             n_features = product_embeddings_tfidf.shape[1]
@@ -94,7 +106,9 @@ class ModelTrainer:
                     f"Using {actual_n_components} components instead."
                 )
             
-            # Dimensionality reduction with SVD
+            # Dimensionality reduction with SVD - EXACTLY match notebook
+            # Notebook: TruncatedSVD(n_components=n_components, random_state=RANDOM_SEED)
+            # RANDOM_SEED = 42 in notebook
             logger.info(f"   Applying SVD with {actual_n_components} components...")
             svd = TruncatedSVD(n_components=actual_n_components, random_state=self.random_seed)
             product_embeddings = svd.fit_transform(product_embeddings_tfidf).astype('float32')
