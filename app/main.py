@@ -41,7 +41,8 @@ app.add_middleware(
 app.add_middleware(PerformanceMiddleware)
 
 # Initialize recommender service (loads artifacts on startup)
-recommender_service = RecommenderService()
+# Use 'artifacts' directory (from training pipeline) instead of 'recommender_artifacts'
+recommender_service = RecommenderService(artifacts_dir="artifacts")
 
 # Pydantic models for request/response
 class RecommendationRequest(BaseModel):
