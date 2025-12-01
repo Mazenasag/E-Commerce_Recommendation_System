@@ -3,10 +3,9 @@ Main script to run the training pipeline
 """
 import argparse
 from src.pipeline.train_pipeline import run_training_pipeline
-from src.utils.logger import setup_logging, get_logger
+from src.utils.logger import get_logger
+from src.utils.exception import CustomException
 
-# Setup logging
-setup_logging()
 logger = get_logger(__name__)
 
 def main():

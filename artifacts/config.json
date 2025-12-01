@@ -1,0 +1,25 @@
+{
+  "event_weights": {
+    "purchased": 5.0,
+    "cart": 3.0,
+    "rating": 2.5,
+    "wishlist": 2.0,
+    "search_keyword": 1.0
+  },
+  "embedding_dimension": 50,
+  "n_components_svd": 50,
+  "explained_variance": 0.7167494297027588,
+  "faiss_index_type": "IndexFlatL2",
+  "model_hyperparameters": {
+    "als_factors": 64,
+    "als_regularization": 0.3,
+    "als_iterations": 30
+  },
+  "data_stats": {
+    "total_users": 433787,
+    "total_products": 200325,
+    "warm_users": 38040,
+    "cold_users": 395747
+  },
+  "training_date": "2025-12-01T23:13:13.828452"
+}

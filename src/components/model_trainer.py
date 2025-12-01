@@ -18,6 +18,8 @@ from typing import Dict, List, Tuple
 import sys
 from src.utils.logger import get_logger
 from src.utils.exception import CustomException
+from typing import Set, Dict, Tuple
+
 
 logger = get_logger(__name__)
 
@@ -79,9 +81,22 @@ class ModelTrainer:
             product_embeddings_tfidf = tfidf.fit_transform(texts)
             logger.info(f"   ✅ TF-IDF shape: {product_embeddings_tfidf.shape}")
             
+            # Get actual number of features and documents
+            n_features = product_embeddings_tfidf.shape[1]
+            n_documents = product_embeddings_tfidf.shape[0]
+            
+            # Adjust n_components if it exceeds available features or documents
+            # SVD can produce at most min(n_features, n_documents) components
+            actual_n_components = min(self.n_components, n_features, n_documents)
+            if actual_n_components < self.n_components:
+                logger.warning(
+                    f"   ⚠️  Requested n_components ({self.n_components}) exceeds available features ({n_features}) or documents ({n_documents}). "
+                    f"Using {actual_n_components} components instead."
+                )
+            
             # Dimensionality reduction with SVD
-            logger.info("   Applying SVD...")
-            svd = TruncatedSVD(n_components=self.n_components, random_state=self.random_seed)
+            logger.info(f"   Applying SVD with {actual_n_components} components...")
+            svd = TruncatedSVD(n_components=actual_n_components, random_state=self.random_seed)
             product_embeddings = svd.fit_transform(product_embeddings_tfidf).astype('float32')
             
             explained_variance = svd.explained_variance_ratio_.sum()
