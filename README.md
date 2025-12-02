@@ -607,7 +607,7 @@ dvc dag --dot | dot -Tpng -o pipeline.png
 # Mac: open pipeline.png
 ```
 
-## 📡 API Documentation
+##  API Documentation
 
 ### Endpoints
 
@@ -693,7 +693,7 @@ Check API health status.
 
 Visit http://localhost:8000/docs for Swagger UI with interactive testing.
 
-## 🐳 Docker Deployment
+##  Docker Deployment
 
 ### Option 1: Pull Pre-built Image from Docker Hub (Recommended)
 
@@ -778,7 +778,7 @@ docker-compose logs -f
 docker-compose down
 ```
 
-## ⚙️ Configuration
+##  Configuration
 
 All configuration is in `config/config.yaml`:
 
@@ -820,7 +820,7 @@ api:
   reload: true
 ```
 
-## 🧪 Testing
+##  Testing
 
 ### Run Unit Tests
 
@@ -845,7 +845,7 @@ pytest tests/test_api.py
 # Visit http://localhost:8000/docs
 ```
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -902,7 +902,7 @@ uvicorn app.main:app --port 8001
 
 Check logs in `logs/` directory for detailed error information.
 
-## 📈 Performance
+##  Performance
 
 ### Expected Performance
 
@@ -919,11 +919,11 @@ Check logs in `logs/` directory for detailed error information.
 3. **Use GPU**: Install `faiss-gpu` for faster similarity search
 4. **Batch Processing**: Process multiple recommendations in batches
 
-## 📝 License
+##  License
 
 See LICENSE file for details.
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch
