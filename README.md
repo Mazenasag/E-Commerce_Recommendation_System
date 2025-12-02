@@ -57,7 +57,7 @@ docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
 
 ```bash
 # Using Conda (recommended)
-conda create -n recommender python=3.10 -y
+conda create -n recommender python=3.11 -y
 conda activate recommender
 pip install -r requirements.txt
 
