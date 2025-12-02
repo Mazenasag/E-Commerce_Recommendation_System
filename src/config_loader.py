@@ -42,7 +42,7 @@ def get_default_config() -> Dict[str, Any]:
     return {
         "data": {
             "raw_data_path": "data/raw/csv_for_case_study_V1.csv",
-            "processed_data_path": "data/processed/processed_data.parquet",
+            "processed_data_path": "data/processed/processed_data.csv",
             "train_test_split_ratio": 0.8
         },
         "model": {

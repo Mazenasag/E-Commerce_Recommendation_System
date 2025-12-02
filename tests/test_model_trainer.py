@@ -42,7 +42,7 @@ def test_create_product_embeddings():
         'cleaned_text': ['laptop computer tech', 'smartphone mobile device', 'headphones audio sound', 'keyboard mouse input']
     })
     
-    embeddings, tfidf, svd = mt.create_product_embeddings(product_info)
+    embeddings, tfidf, svd, product_info_final = mt.create_product_embeddings(product_info)
     
     # Check embeddings shape
     assert embeddings.shape[0] == 4  # Number of products

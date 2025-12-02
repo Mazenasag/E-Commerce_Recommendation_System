@@ -8,7 +8,7 @@
   },
   "embedding_dimension": 50,
   "n_components_svd": 50,
-  "explained_variance": 0.6926168203353882,
+  "explained_variance": 0.6929998993873596,
   "faiss_index_type": "IndexFlatL2",
   "model_hyperparameters": {
     "als_factors": 64,
@@ -19,7 +19,7 @@
     "total_interactions": 500000,
     "total_users": 433787,
     "total_products": 200325,
-    "warm_users": 49359,
-    "cold_users": 384428
+    "warm_users": 38040,
+    "cold_users": 395747
   }
 }

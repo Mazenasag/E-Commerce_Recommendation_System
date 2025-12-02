@@ -52,7 +52,7 @@ class ModelTrainer:
         self.min_df = emb_config.get('min_df', 3)
         self.n_components = emb_config.get('n_components', 50)
     
-    def create_product_embeddings(self, product_info: pd.DataFrame) -> Tuple[np.ndarray, TfidfVectorizer, TruncatedSVD]:
+    def create_product_embeddings(self, product_info: pd.DataFrame) -> Tuple[np.ndarray, TfidfVectorizer, TruncatedSVD, pd.DataFrame]:
         """
         Create product embeddings using TF-IDF + SVD
         EXACTLY matches model_build.ipynb notebook implementation
@@ -61,44 +61,35 @@ class ModelTrainer:
             product_info: DataFrame with product_id and cleaned_text columns
         
         Returns:
-            Tuple of (embeddings, tfidf_vectorizer, svd_transformer)
+            Tuple of (embeddings, tfidf_vectorizer, svd_transformer, filtered_product_info)
         """
         try:
             logger.info("🔄 Creating product embeddings...")
             
-            # EXACTLY match notebook: drop duplicates and dropna first
-            # Notebook does: product_info = df[['product_id', 'cleaned_text']].drop_duplicates(subset=['product_id'])
-            #                product_info = product_info.dropna(subset=['cleaned_text'])
             product_info = product_info.drop_duplicates(subset=['product_id'])
             product_info = product_info.dropna(subset=['cleaned_text'])
             
             logger.info(f"   📊 Products with cleaned text: {len(product_info):,}")
             
-            # Prepare text data - EXACTLY match notebook
-            # Notebook uses: product_info['cleaned_text'].fillna('').astype(str)
-            # But since we already dropna, we just need to ensure it's string
-            texts = product_info['cleaned_text'].fillna('').astype(str)
+            product_info['cleaned_text'] = product_info['cleaned_text'].fillna('').astype(str)
             
-            # TF-IDF vectorization - EXACTLY match notebook parameters
-            # Notebook: max_features=100, ngram_range=(1, 2), min_df=3, stop_words=None, dtype=np.float32
+            texts = product_info['cleaned_text']
+            
             logger.info("   Creating TF-IDF vectors...")
             tfidf = TfidfVectorizer(
-                max_features=self.max_features,        # 100 (from config)
-                ngram_range=self.ngram_range,          # (1, 2) (from config)
-                min_df=self.min_df,                    # 3 (from config)
-                stop_words=None,                       # Keep all words (handles Arabic too)
-                dtype=np.float32                       # Use float32 instead of float64 (saves 50% memory)
+                max_features=self.max_features,
+                ngram_range=self.ngram_range,
+                min_df=self.min_df,
+                stop_words=None,
+                dtype=np.float32
             )
             
             product_embeddings_tfidf = tfidf.fit_transform(texts)
             logger.info(f"   ✅ TF-IDF shape: {product_embeddings_tfidf.shape} (sparse)")
             
-            # Get actual number of features and documents
             n_features = product_embeddings_tfidf.shape[1]
             n_documents = product_embeddings_tfidf.shape[0]
             
-            # Adjust n_components if it exceeds available features or documents
-            # SVD can produce at most min(n_features, n_documents) components
             actual_n_components = min(self.n_components, n_features, n_documents)
             if actual_n_components < self.n_components:
                 logger.warning(
@@ -106,9 +97,6 @@ class ModelTrainer:
                     f"Using {actual_n_components} components instead."
                 )
             
-            # Dimensionality reduction with SVD - EXACTLY match notebook
-            # Notebook: TruncatedSVD(n_components=n_components, random_state=RANDOM_SEED)
-            # RANDOM_SEED = 42 in notebook
             logger.info(f"   Applying SVD with {actual_n_components} components...")
             svd = TruncatedSVD(n_components=actual_n_components, random_state=self.random_seed)
             product_embeddings = svd.fit_transform(product_embeddings_tfidf).astype('float32')
@@ -117,7 +105,7 @@ class ModelTrainer:
             logger.info(f"   ✅ Reduced shape: {product_embeddings.shape}")
             logger.info(f"   ✅ Explained variance: {explained_variance:.2%}")
             
-            return product_embeddings, tfidf, svd
+            return product_embeddings, tfidf, svd, product_info
             
         except Exception as e:
             logger.error(f"Error creating product embeddings: {e}")
@@ -186,6 +174,7 @@ class ModelTrainer:
                                  user_segment: Set = None) -> Tuple[csr_matrix, Dict]:
         """
         Build sparse interaction matrix
+        EXACTLY matches notebook: uses actual user_idx and product_idx values
         
         Args:
             df: DataFrame with user_idx, product_idx, score columns
@@ -209,27 +198,37 @@ class ModelTrainer:
             # Aggregate scores
             train_scores = df_filtered.groupby(['user_idx', 'product_idx'])['score'].sum().reset_index()
             
-            # Build user list
-            user_list = sorted(df_filtered['user_idx'].unique())
-            user_to_matrix_idx = {uid: i for i, uid in enumerate(user_list)}
-            
-            n_users = len(user_list)
+            n_users = mappings['n_users']
             n_products = mappings['n_products']
             
-            # Create sparse matrix
-            matrix = csr_matrix(
-                (train_scores['score'].values,
-                 ([user_to_matrix_idx[u] for u in train_scores['user_idx']], 
-                  train_scores['product_idx'].values)),
-                shape=(n_users, n_products)
-            )
+            if user_segment:
+                # For warm users: use matrix indices (for ALS training)
+                user_list = sorted(df_filtered['user_idx'].unique())
+                user_to_matrix_idx = {uid: i for i, uid in enumerate(user_list)}
+                
+                matrix = csr_matrix(
+                    (train_scores['score'].values,
+                     ([user_to_matrix_idx[u] for u in train_scores['user_idx']], 
+                      train_scores['product_idx'].values)),
+                    shape=(len(user_list), n_products)
+                )
+                
+                warm_user_info = {
+                    'warm_user_list': user_list,
+                    'warm_user_to_matrix_idx': user_to_matrix_idx
+                }
+            else:
+                # For full interaction matrix: use actual user_idx values (EXACTLY like notebook line 2755)
+                # Notebook: interaction_matrix = csr_matrix((train_scores['score'].values, (train_scores['user_idx'].values, train_scores['product_idx'].values)), shape=(n_users, n_products))
+                matrix = csr_matrix(
+                    (train_scores['score'].values,
+                     (train_scores['user_idx'].values, train_scores['product_idx'].values)),
+                    shape=(n_users, n_products)
+                )
+                
+                warm_user_info = {}
             
             logger.info(f"   ✅ Matrix shape: {matrix.shape}, Non-zero: {matrix.nnz:,}")
-            
-            warm_user_info = {
-                'warm_user_list': user_list,
-                'warm_user_to_matrix_idx': user_to_matrix_idx
-            }
             
             return matrix, warm_user_info
             
@@ -238,13 +237,15 @@ class ModelTrainer:
             raise CustomException(f"Failed to build interaction matrix: {str(e)}", sys)
     
     def build_product_user_lookup(self, interaction_matrix: csr_matrix, 
-                                   mappings: Dict) -> Dict:
+                                   mappings: Dict, products_with_embeddings: set = None) -> Dict:
         """
         Build product-to-users lookup for content-based recommendations
+        EXACTLY matches notebook: only includes products with embeddings
         
         Args:
             interaction_matrix: Sparse interaction matrix
             mappings: ID mappings dictionary
+            products_with_embeddings: Set of product IDs that have embeddings (from product_info)
         
         Returns:
             Dictionary mapping product_idx to list of (user_idx, score) tuples
@@ -252,17 +253,34 @@ class ModelTrainer:
         try:
             logger.info("🔄 Building product-user lookup...")
             
-            # Convert to COO format for efficient iteration
+            if products_with_embeddings is None:
+                products_with_embeddings = set(mappings['product_id_to_idx'].keys())
+            
+            idx_to_product_id = mappings['idx_to_product_id']
+            
             coo_matrix = interaction_matrix.tocoo()
             
-            product_to_users = defaultdict(list)
+            # EXACTLY like notebook: product_to_users_list = {}  # {product_idx: [(user_idx, score), ...]}
+            product_to_users = {}
             
+            # EXACTLY like notebook: iterate through COO matrix entries
+            # Notebook: for user_idx, product_idx, score in tqdm(zip(coo_matrix.row, coo_matrix.col, coo_matrix.data), ...)
             for user_idx, product_idx, score in tqdm(
                 zip(coo_matrix.row, coo_matrix.col, coo_matrix.data),
                 total=len(coo_matrix.data),
                 desc="Building lookup"
             ):
-                product_to_users[int(product_idx)].append((int(user_idx), float(score)))
+                # EXACTLY like notebook line 2782-2786:
+                # orig_pid = idx_to_product_id.get(product_idx)
+                # if orig_pid and orig_pid in products_with_embeddings:
+                #     if product_idx not in product_to_users_list:
+                #         product_to_users_list[product_idx] = []
+                #     product_to_users_list[product_idx].append((int(user_idx), float(score)))
+                orig_pid = idx_to_product_id.get(int(product_idx))
+                if orig_pid is not None and orig_pid in products_with_embeddings:
+                    if int(product_idx) not in product_to_users:
+                        product_to_users[int(product_idx)] = []
+                    product_to_users[int(product_idx)].append((int(user_idx), float(score)))
             
             logger.info(f"   ✅ Lookup built for {len(product_to_users):,} products")
             return dict(product_to_users)

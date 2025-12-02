@@ -85,14 +85,12 @@ class DataTransformation:
         return text
     
     def clean_product_name(self, name: str) -> list:
-        """Clean product name and return word list"""
+        """Clean product name and return word list - EXACTLY matches notebook normalize_and_clean_simple"""
         name = str(name)
         # Apply unit normalization
         name = self.normalize_units(name)
-        # Keep only Arabic, English letters, and spaces
+        # Keep only Arabic, English letters, and spaces (NOT removing numbers - matches notebook)
         name = re.sub(r"[^\w\s\u0600-\u06FF]", " ", name)
-        # Remove numbers
-        name = re.sub(r"\d+", " ", name)
         # Normalize multiple spaces
         name = re.sub(r"\s+", " ", name).strip()
         # Tokenize
@@ -219,18 +217,111 @@ class DataTransformation:
     
     def save_processed_data(self, df: pd.DataFrame, output_path: str):
         """
-        Save processed data to disk
+        Save processed data to disk (CSV format only)
         
         Args:
             df: Processed DataFrame
-            output_path: Path to save processed data
+            output_path: Path to save processed data (will be converted to .csv)
         """
         try:
             ensure_dir(Path(output_path).parent)
-            df.to_parquet(output_path, index=False)
-            logger.info(f"✅ Processed data saved to {output_path}")
+            
+            # Always save as CSV, convert any .parquet extension to .csv
+            if output_path.endswith('.parquet'):
+                csv_path = str(Path(output_path).with_suffix('.csv'))
+            elif output_path.endswith('.csv'):
+                csv_path = output_path
+            else:
+                csv_path = output_path if output_path.endswith('.csv') else output_path + '.csv'
+            
+            df.to_csv(csv_path, index=False)
+            logger.info(f"✅ Processed data saved to {csv_path} ({len(df):,} rows)")
+            
+            # Remove old parquet file if it exists
+            parquet_path = Path(output_path)
+            if parquet_path.exists() and parquet_path.suffix == '.parquet':
+                try:
+                    parquet_path.unlink()
+                    logger.info(f"   Removed old parquet file: {parquet_path}")
+                except Exception:
+                    pass
         except Exception as e:
             logger.warning(f"Could not save processed data: {e}")
+    
+    def build_product_user_lookup(self, df: pd.DataFrame, mappings: Dict) -> Dict:
+        """
+        Build product-to-users lookup from interaction data
+        Created during preprocessing phase
+        
+        Args:
+            df: DataFrame with user_idx, product_idx, score columns
+            mappings: ID mappings dictionary
+            
+        Returns:
+            Dictionary mapping product_idx to list of (user_idx, score) tuples
+        """
+        try:
+            logger.info("🔄 Building product-user lookup from interactions...")
+            
+            # Group by product and user, sum scores
+            product_user_scores = df.groupby(['product_idx', 'user_idx'])['score'].sum().reset_index()
+            
+            # Build lookup dictionary
+            product_to_users = {}
+            for _, row in product_user_scores.iterrows():
+                product_idx = int(row['product_idx'])
+                user_idx = int(row['user_idx'])
+                score = float(row['score'])
+                
+                if product_idx not in product_to_users:
+                    product_to_users[product_idx] = []
+                product_to_users[product_idx].append((user_idx, score))
+            
+            logger.info(f"   ✅ Lookup built for {len(product_to_users):,} products")
+            return product_to_users
+            
+        except Exception as e:
+            logger.error(f"Error building product-user lookup: {e}")
+            raise CustomException(f"Failed to build product-user lookup: {str(e)}", sys)
+    
+    def load_processed_data(self, input_path: str) -> pd.DataFrame:
+        """
+        Load processed data from disk (CSV format)
+        
+        Args:
+            input_path: Path to load processed data from
+            
+        Returns:
+            Loaded DataFrame with proper data types
+        """
+        try:
+            if input_path.endswith('.parquet'):
+                csv_path = input_path.replace('.parquet', '.csv')
+            elif input_path.endswith('.csv'):
+                csv_path = input_path
+            else:
+                csv_path = input_path + '.csv'
+            
+            if not Path(csv_path).exists():
+                raise FileNotFoundError(f"Processed data file not found: {csv_path}")
+            
+            df = pd.read_csv(csv_path)
+            
+            # Convert data types
+            if 'event_date' in df.columns:
+                df['event_date'] = pd.to_datetime(df['event_date'])
+            if 'user_idx' in df.columns:
+                df['user_idx'] = df['user_idx'].astype('int64')
+            if 'product_idx' in df.columns:
+                df['product_idx'] = df['product_idx'].astype('int64')
+            if 'score' in df.columns:
+                df['score'] = df['score'].astype('float64')
+            
+            logger.info(f"✅ Processed data loaded from {csv_path} ({len(df):,} rows)")
+            return df
+        except Exception as e:
+            logger.error(f"Could not load processed data: {e}")
+            raise
 
 if __name__ == "__main__":
     import yaml
