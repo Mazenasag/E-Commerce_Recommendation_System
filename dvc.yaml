@@ -1,0 +1,40 @@
+stages:
+  data_transformation:
+    cmd: python -c "from src.components.data_transformation import 
+      DataTransformation; from src.components.data_ingestion import 
+      DataIngestion; from src.config_loader import load_config; config = 
+      load_config(); di = DataIngestion(config); df = di.load_data(); dt = 
+      DataTransformation(config); df = dt.clean_data(df); df = 
+      dt.process_product_names(df); df = dt.create_weighted_scores(df); mappings
+      = dt.create_id_mappings(df); dt.save_processed_data(df, config.get('data',
+      {}).get('processed_data_path', 'data/processed/processed_data.csv'))"
+    deps:
+    - data/raw/csv_for_case_study_V1.csv
+    - src/components/data_transformation.py
+    - src/components/data_ingestion.py
+    - config/config.yaml
+    outs:
+    - data/processed/processed_data.csv
+
+  model_training:
+    cmd: python run_pipeline.py --config config/config.yaml
+    deps:
+    - data/processed/processed_data.csv
+    - src/pipeline/train_pipeline.py
+    - src/components/model_trainer.py
+    - src/components/data_transformation.py
+    - config/config.yaml
+    outs:
+    - artifacts/als_model.pkl
+    - artifacts/faiss_index.bin
+    - artifacts/product_embeddings.npy
+    - artifacts/tfidf_vectorizer.pkl
+    - artifacts/svd_transformer.pkl
+    - artifacts/id_mappings.json
+    - artifacts/train_matrix.npz
+    - artifacts/interaction_matrix.npz
+    - artifacts/warm_user_info.json
+    - artifacts/product_to_users_lookup.json
+    - artifacts/product_ids_list.json
+    - artifacts/config.json
+

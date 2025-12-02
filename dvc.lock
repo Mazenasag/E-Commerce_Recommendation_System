@@ -1,0 +1,105 @@
+schema: '2.0'
+stages:
+  data_transformation:
+    cmd: python -c "from src.components.data_transformation import 
+      DataTransformation; from src.components.data_ingestion import 
+      DataIngestion; from src.config_loader import load_config; config = 
+      load_config(); di = DataIngestion(config); df = di.load_data(); dt = 
+      DataTransformation(config); df = dt.clean_data(df); df = 
+      dt.process_product_names(df); df = dt.create_weighted_scores(df); mappings
+      = dt.create_id_mappings(df); dt.save_processed_data(df, config.get('data',
+      {}).get('processed_data_path', 'data/processed/processed_data.csv'))"
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 7978cb07684a3fea810cb6751a475351
+      size: 2183
+    - path: data/raw/csv_for_case_study_V1.csv
+      hash: md5
+      md5: 20a0b0225386b863ad9114eb3fe098db
+      size: 51011920
+    - path: src/components/data_ingestion.py
+      hash: md5
+      md5: ec6c6172c34522c7ce758ed43eb4c018
+      size: 2485
+    - path: src/components/data_transformation.py
+      hash: md5
+      md5: 4b986fd6ca94d67d41be08a4f9b1579f
+      size: 7975
+    outs:
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: adb1949f20a5280033801d6a95f9119a
+      size: 129802968
+  model_training:
+    cmd: python run_pipeline.py --config config/config.yaml
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 7978cb07684a3fea810cb6751a475351
+      size: 2183
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: adb1949f20a5280033801d6a95f9119a
+      size: 129802968
+    - path: src/components/data_transformation.py
+      hash: md5
+      md5: 4b986fd6ca94d67d41be08a4f9b1579f
+      size: 7975
+    - path: src/components/model_trainer.py
+      hash: md5
+      md5: d8bc7111f5f5c53df3bbe118c93850e9
+      size: 7156
+    - path: src/pipeline/train_pipeline.py
+      hash: md5
+      md5: 0894e76186460c214fc1758ed4656edc
+      size: 9065
+    outs:
+    - path: artifacts/als_model.pkl
+      hash: md5
+      md5: 0e44625acc09411d8c737ddf119e2be2
+      size: 61021974
+    - path: artifacts/config.json
+      hash: md5
+      md5: d543e2a6b223b27b9bc57746468b5135
+      size: 570
+    - path: artifacts/faiss_index.bin
+      hash: md5
+      md5: adfda6fc3db4539df64869fac6eb0735
+      size: 40065045
+    - path: artifacts/id_mappings.json
+      hash: md5
+      md5: a57c0da7a93b2bd02b055c06f4a75f68
+      size: 33804513
+    - path: artifacts/interaction_matrix.npz
+      hash: md5
+      md5: 18204cd2cf7bb3d0cb6b464a2e09b0e5
+      size: 1769976
+    - path: artifacts/product_embeddings.npy
+      hash: md5
+      md5: 3e57f1d404b0715fda161da8681c6efa
+      size: 40065128
+    - path: artifacts/product_ids_list.json
+      hash: md5
+      md5: f84263f0f7b71fbd251accb9c69cdaf5
+      size: 1892145
+    - path: artifacts/product_to_users_lookup.json
+      hash: md5
+      md5: 371b34beb4be885f5976212ed3cf1be7
+      size: 10514922
+    - path: artifacts/svd_transformer.pkl
+      hash: md5
+      md5: 86ac414ef3289c5133e43a3b22163e8b
+      size: 21175
+    - path: artifacts/tfidf_vectorizer.pkl
+      hash: md5
+      md5: 2b045a39bb07d385ccd94ead9d93bfff
+      size: 4092
+    - path: artifacts/train_matrix.npz
+      hash: md5
+      md5: 8272074954598a31e0964c8c6013d0bc
+      size: 359872
+    - path: artifacts/warm_user_info.json
+      hash: md5
+      md5: ceeab18cabb71052b1169a90936a3720
+      size: 1295278
