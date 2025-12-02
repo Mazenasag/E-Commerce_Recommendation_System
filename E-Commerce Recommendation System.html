@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<!-- saved from url=(0022)http://localhost:8000/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Recommendation System</title>
+    <link rel="stylesheet" href="./E-Commerce Recommendation System_files/styles.css">
+<style>@font-face {
+              font-family: 'Open Sans Regular';
+              font-style: normal;
+              font-weight: 400;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/open-sans-v18-latin-regular.woff');
+          }</style><style>@font-face {
+              font-family: 'Open Sans Bold';
+              font-style: normal;
+              font-weight: 800;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/OpenSans-Bold.woff');
+          }</style><style>@font-face {
+              font-family: 'Open Sans ExtraBold';
+              font-style: normal;
+              font-weight: 800;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/open-sans-v18-latin-800.woff');
+          }</style></head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛍️ E-Commerce Recommendation System</h1>
+            <p class="subtitle">Get user recommendations for any product using multiple AI models</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <label for="productId">Product ID</label>
+                <div class="input-group">
+                    <input type="number" id="productId" placeholder="Enter product ID (e.g., 1, 2, 410...)" min="1">
+                    <button id="searchBtn" onclick="searchRecommendations()" class="primary-btn">
+                        <span class="btn-text" style="display: inline;">🚀 Get Recommendations</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner-small"></span> Loading...
+                        </span>
+                    </button>
+                </div>
+                <div class="input-group">
+                    <label for="numResults" class="inline-label">Number of Results:</label>
+                    <select id="numResults">
+                        <option value="5">5</option>
+                        <option value="10" selected="">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <div id="resultsSection" class="results-section" style="display: block;">
+            <div class="results-header">
+                <div class="header-content">
+                    <h2>Recommendations for Product ID: <span id="resultProductId" class="highlight">2</span></h2>
+                    <div class="stats-bar">
+                        <span id="totalRecommendations" class="stat-badge">10 recommendations</span>
+                    </div>
+                </div>
+                
+                <!-- Toggle for Other Methods -->
+                <div class="method-toggle-section">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="showOtherMethods" onchange="toggleOtherMethods()">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">Compare with Other Methods</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Hybrid Model - Full Width First (Always Visible) -->
+            <div class="hybrid-model-section">
+                <div class="model-card featured">
+                    <div class="model-header">
+                        <div class="model-title-group">
+                            <h3>🔀 Hybrid Model</h3>
+                            <span class="model-badge recommended">⭐ Recommended</span>
+                        </div>
+                        <div class="model-performance">
+                            <span class="performance-indicator">Best Performance</span>
+                        </div>
+                    </div>
+                    <div class="model-description">
+                        <p>Combines <strong>ALS (40%)</strong> + <strong>Content-Based (60%)</strong> for optimal accuracy and coverage</p>
+                    </div>
+                    <div id="hybridResults" class="recommendations-list">
+        <div class="recommendation-item" data-index="0" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#1</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3133927
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3133927" class="user-id-link" onclick="handleUserClick(event, 3133927)">
+                    User ID: 3133927
+                </a> -->
+            </div>
+            <div class="score">0.6000</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="1" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#2</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 4777149
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=4777149" class="user-id-link" onclick="handleUserClick(event, 4777149)">
+                    User ID: 4777149
+                </a> -->
+            </div>
+            <div class="score">0.5940</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="2" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#3</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 13423063
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=13423063" class="user-id-link" onclick="handleUserClick(event, 13423063)">
+                    User ID: 13423063
+                </a> -->
+            </div>
+            <div class="score">0.5651</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="3" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#4</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 5626438
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=5626438" class="user-id-link" onclick="handleUserClick(event, 5626438)">
+                    User ID: 5626438
+                </a> -->
+            </div>
+            <div class="score">0.5651</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="4" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#5</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 8032241
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=8032241" class="user-id-link" onclick="handleUserClick(event, 8032241)">
+                    User ID: 8032241
+                </a> -->
+            </div>
+            <div class="score">0.5569</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="5" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#6</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 4798464
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=4798464" class="user-id-link" onclick="handleUserClick(event, 4798464)">
+                    User ID: 4798464
+                </a> -->
+            </div>
+            <div class="score">0.5305</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="6" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#7</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3546895
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3546895" class="user-id-link" onclick="handleUserClick(event, 3546895)">
+                    User ID: 3546895
+                </a> -->
+            </div>
+            <div class="score">0.5305</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="7" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#8</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 2749385
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=2749385" class="user-id-link" onclick="handleUserClick(event, 2749385)">
+                    User ID: 2749385
+                </a> -->
+            </div>
+            <div class="score">0.5200</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="8" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#9</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3088562
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3088562" class="user-id-link" onclick="handleUserClick(event, 3088562)">
+                    User ID: 3088562
+                </a> -->
+            </div>
+            <div class="score">0.5188</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="9" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#10</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3709651
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3709651" class="user-id-link" onclick="handleUserClick(event, 3709651)">
+                    User ID: 3709651
+                </a> -->
+            </div>
+            <div class="score">0.4848</div>
+        </div>
+    </div>
+                </div>
+            </div>
+
+            <!-- Other Three Models - Below Hybrid (Toggleable) -->
+            <div id="otherMethodsSection" class="other-methods-section" style="display: block;">
+                <div class="section-divider">
+                    <span>Alternative Methods</span>
+                </div>
+                <div class="models-grid">
+                    <!-- ALS Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>🤝 Collaborative Filtering (ALS)</h3>
+                            <span class="model-badge">Warm Users</span>
+                        </div>
+                        <div class="model-description">
+                            Matrix factorization for users with 2+ interactions
+                        </div>
+                        <div id="alsResults" class="recommendations-list">
+        <div class="recommendation-item" data-index="0" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#1</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 2695961
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=2695961" class="user-id-link" onclick="handleUserClick(event, 2695961)">
+                    User ID: 2695961
+                </a> -->
+            </div>
+            <div class="score">0.0005</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="1" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#2</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 11245980
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=11245980" class="user-id-link" onclick="handleUserClick(event, 11245980)">
+                    User ID: 11245980
+                </a> -->
+            </div>
+            <div class="score">0.0004</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="2" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#3</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 9052677
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=9052677" class="user-id-link" onclick="handleUserClick(event, 9052677)">
+                    User ID: 9052677
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="3" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#4</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 13400824
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=13400824" class="user-id-link" onclick="handleUserClick(event, 13400824)">
+                    User ID: 13400824
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="4" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#5</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 7821232
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=7821232" class="user-id-link" onclick="handleUserClick(event, 7821232)">
+                    User ID: 7821232
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="5" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#6</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 1503750
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=1503750" class="user-id-link" onclick="handleUserClick(event, 1503750)">
+                    User ID: 1503750
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="6" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#7</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 12979136
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=12979136" class="user-id-link" onclick="handleUserClick(event, 12979136)">
+                    User ID: 12979136
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="7" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#8</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3413585
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3413585" class="user-id-link" onclick="handleUserClick(event, 3413585)">
+                    User ID: 3413585
+                </a> -->
+            </div>
+            <div class="score">0.0003</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="8" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#9</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 2919654
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=2919654" class="user-id-link" onclick="handleUserClick(event, 2919654)">
+                    User ID: 2919654
+                </a> -->
+            </div>
+            <div class="score">0.0002</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="9" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#10</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 11123649
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=11123649" class="user-id-link" onclick="handleUserClick(event, 11123649)">
+                    User ID: 11123649
+                </a> -->
+            </div>
+            <div class="score">0.0002</div>
+        </div>
+    </div>
+                    </div>
+
+                    <!-- Content-Based Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>📝 Content-Based</h3>
+                            <span class="model-badge">Similar Products</span>
+                        </div>
+                        <div class="model-description">
+                            Finds users who interacted with similar products using embeddings
+                        </div>
+                        <div id="contentResults" class="recommendations-list">
+        <div class="recommendation-item" data-index="0" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#1</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3133927
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3133927" class="user-id-link" onclick="handleUserClick(event, 3133927)">
+                    User ID: 3133927
+                </a> -->
+            </div>
+            <div class="score">5.9452</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="1" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#2</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 4777149
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=4777149" class="user-id-link" onclick="handleUserClick(event, 4777149)">
+                    User ID: 4777149
+                </a> -->
+            </div>
+            <div class="score">5.8860</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="2" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#3</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 13423063
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=13423063" class="user-id-link" onclick="handleUserClick(event, 13423063)">
+                    User ID: 13423063
+                </a> -->
+            </div>
+            <div class="score">5.5990</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="3" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#4</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 5626438
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=5626438" class="user-id-link" onclick="handleUserClick(event, 5626438)">
+                    User ID: 5626438
+                </a> -->
+            </div>
+            <div class="score">5.5990</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="4" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#5</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 8032241
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=8032241" class="user-id-link" onclick="handleUserClick(event, 8032241)">
+                    User ID: 8032241
+                </a> -->
+            </div>
+            <div class="score">5.5183</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="5" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#6</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 4798464
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=4798464" class="user-id-link" onclick="handleUserClick(event, 4798464)">
+                    User ID: 4798464
+                </a> -->
+            </div>
+            <div class="score">5.2564</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="6" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#7</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3546895
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3546895" class="user-id-link" onclick="handleUserClick(event, 3546895)">
+                    User ID: 3546895
+                </a> -->
+            </div>
+            <div class="score">5.2564</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="7" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#8</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 2749385
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=2749385" class="user-id-link" onclick="handleUserClick(event, 2749385)">
+                    User ID: 2749385
+                </a> -->
+            </div>
+            <div class="score">5.1523</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="8" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#9</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3088562
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3088562" class="user-id-link" onclick="handleUserClick(event, 3088562)">
+                    User ID: 3088562
+                </a> -->
+            </div>
+            <div class="score">5.1409</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="9" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#10</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 3709651
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=3709651" class="user-id-link" onclick="handleUserClick(event, 3709651)">
+                    User ID: 3709651
+                </a> -->
+            </div>
+            <div class="score">4.8040</div>
+        </div>
+    </div>
+                    </div>
+
+                    <!-- Popularity Model -->
+                    <div class="model-card">
+                        <div class="model-header">
+                            <h3>⭐ Popularity Baseline</h3>
+                            <span class="model-badge">Global</span>
+                        </div>
+                        <div class="model-description">
+                            Recommends globally most active users
+                        </div>
+                        <div id="popularityResults" class="recommendations-list">
+        <div class="recommendation-item" data-index="0" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#1</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 6458633
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=6458633" class="user-id-link" onclick="handleUserClick(event, 6458633)">
+                    User ID: 6458633
+                </a> -->
+            </div>
+            <div class="score">87.7404</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="1" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#2</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 10618325
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=10618325" class="user-id-link" onclick="handleUserClick(event, 10618325)">
+                    User ID: 10618325
+                </a> -->
+            </div>
+            <div class="score">66.1685</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="2" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#3</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 6587905
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=6587905" class="user-id-link" onclick="handleUserClick(event, 6587905)">
+                    User ID: 6587905
+                </a> -->
+            </div>
+            <div class="score">64.7100</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="3" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#4</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 12150173
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=12150173" class="user-id-link" onclick="handleUserClick(event, 12150173)">
+                    User ID: 12150173
+                </a> -->
+            </div>
+            <div class="score">64.2546</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="4" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#5</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 5896846
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=5896846" class="user-id-link" onclick="handleUserClick(event, 5896846)">
+                    User ID: 5896846
+                </a> -->
+            </div>
+            <div class="score">43.6067</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="5" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#6</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 693931
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=693931" class="user-id-link" onclick="handleUserClick(event, 693931)">
+                    User ID: 693931
+                </a> -->
+            </div>
+            <div class="score">41.7563</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="6" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#7</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 216949
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=216949" class="user-id-link" onclick="handleUserClick(event, 216949)">
+                    User ID: 216949
+                </a> -->
+            </div>
+            <div class="score">38.0120</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="7" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#8</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 11187873
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=11187873" class="user-id-link" onclick="handleUserClick(event, 11187873)">
+                    User ID: 11187873
+                </a> -->
+            </div>
+            <div class="score">35.0071</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="8" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#9</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 5819367
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=5819367" class="user-id-link" onclick="handleUserClick(event, 5819367)">
+                    User ID: 5819367
+                </a> -->
+            </div>
+            <div class="score">33.0736</div>
+        </div>
+    
+        <div class="recommendation-item" data-index="9" style="opacity: 1; transform: translateX(0px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="rank">#10</span>
+            <div class="user-info">
+                <span class="user-id-link" style="cursor: default; text-decoration: none;">
+                    User ID: 5947757
+                </span>
+                <!-- <a href="/static/user-history.html?user_id=5947757" class="user-id-link" onclick="handleUserClick(event, 5947757)">
+                    User ID: 5947757
+                </a> -->
+            </div>
+            <div class="score">31.9846</div>
+        </div>
+    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ## Similar Products Section - COMMENTED OUT FOR PERFORMANCE
+            <div class="similar-products-section">
+                <div class="section-header">
+                    <h3>🔍 Similar Products</h3>
+                    <p class="section-subtitle">Products with similar characteristics</p>
+                </div>
+                <div id="similarProducts" class="similar-products-list"></div>
+            </div>
+            -->
+        </div>
+
+        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading recommendations...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>@Mazen</p>
+    </footer>
+
+    <script src="./E-Commerce Recommendation System_files/script.js.download"></script>
+
+
+
+</body></html>
