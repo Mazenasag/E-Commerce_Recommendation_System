@@ -18,10 +18,10 @@
 docker pull mazenasag/ecommerce-recommender:latest
 
 # Run the API server with volume mounts
-docker run -d -p 8000:8000 \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/artifacts:/app/artifacts \
-  mazenasag/ecommerce-recommender:latest
+docker pull mazenasag/ecommerce-recommender:latest
+docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
+
+
 
 # Access the API
 # - API Docs: http://localhost:8000/docs
