@@ -297,7 +297,7 @@ E-Commerce_Recommendation_System/
 
 ### Prerequisites
 
-- Python 3.8+
+- Python 3.11
 - Conda (recommended) or pip
 - Docker (optional, for containerized deployment)
 
