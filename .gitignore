@@ -8,6 +8,8 @@ data/processed/processed_data.parquet
 # C extensions
 *.so
 
+artifacts/
+
 # Distribution / packaging
 .Python
 build/
