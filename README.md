@@ -37,9 +37,11 @@ docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
 <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
   <img src="static\photo\Capture1.PNG" style="width: 90%; border-radius: 12px;" />
   <img src="static\photo\Capture.PNG" style="width: 90%; border-radius: 12px;" />
+  <img src="static\photo\Capture2.PNG" style="width: 90%; border-radius: 12px;" />
   
   
 </div>
+[View the page](file.html)
 
 
 ## 📋 Table of Contents
