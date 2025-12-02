@@ -3,6 +3,8 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+data/processed/processed_data.csv
+data/processed/processed_data.parquet
 # C extensions
 *.so
 
