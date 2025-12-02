@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎯 E-Commerce Recommendation System
+#  E-Commerce Recommendation System
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green.svg)](https://fastapi.tiangolo.com/)
@@ -28,7 +28,7 @@ docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
 # - Web UI: http://localhost:8000/static/index.html
 ```
 
-**📦 Docker Image:** `mazenasag/ecommerce-recommender:latest`
+** Docker Image:** `mazenasag/ecommerce-recommender:latest`
 
 ---
 
@@ -46,7 +46,7 @@ You can view the interactive page here:
 [E-Commerce Recommendation System](https://Mazenasag.github.io/E-Commerce_Recommendation_System/E-Commerce%20Recommendation%20System.html)
 
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Quick Start](#-quick-start)
 - [Overview](#overview)
@@ -63,7 +63,7 @@ You can view the interactive page here:
 - [Testing](#testing)
 - [Troubleshooting](#troubleshooting)
 
-## ⚡ Quick Start
+##  Quick Start
 
 ### 1. Install Dependencies
 
@@ -119,7 +119,7 @@ docker run -d -p 8000:8000 \
 docker-compose up -d
 ```
 
-## 🎯 Overview
+##  Overview
 
 This system provides intelligent product recommendations by analyzing user interactions (views, purchases, cart additions, ratings) and product content (names, descriptions). It uses a hybrid approach combining:
 
@@ -129,7 +129,7 @@ This system provides intelligent product recommendations by analyzing user inter
 
 The system is designed for Arabic and English e-commerce platforms with support for bilingual product names.
 
-## ✨ Features
+##  Features
 
 - **Multiple Recommendation Methods**:
   - Hybrid (ALS + Content-Based) - Recommended
@@ -156,7 +156,7 @@ The system is designed for Arabic and English e-commerce platforms with support 
   - Docker containerization
   - Web interface for testing
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────┐
@@ -199,7 +199,7 @@ The system is designed for Arabic and English e-commerce platforms with support 
 └─────────────────┘
 ```
 
-## 📊 Data Description
+##  Data Description
 
 ### Input Data Format
 
@@ -227,7 +227,7 @@ Different interaction types have different importance:
 - `wishlist`: 2.0
 - `search_keyword`: 1.0
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 E-Commerce_Recommendation_System/
@@ -305,7 +305,7 @@ E-Commerce_Recommendation_System/
 └── README.md                    # This file
 ```
 
-## 🚀 Installation
+##  Installation
 
 ### Prerequisites
 
@@ -345,7 +345,7 @@ pip install -r requirements.txt
 
 ### Option 3: Docker (See Docker Deployment section)
 
-## 💻 Usage
+##  Usage
 
 ### 1. Prepare Data
 
@@ -439,7 +439,7 @@ curl -X POST "http://localhost:8000/recommendations" \
 3. Select recommendation method
 4. Click "Get Recommendations"
 
-## 🔄 Running with DVC (Data Version Control)
+##  Running with DVC (Data Version Control)
 
 DVC allows you to version control your data pipeline, track dependencies, and reproduce experiments. Here's how to use DVC with this project:
 
