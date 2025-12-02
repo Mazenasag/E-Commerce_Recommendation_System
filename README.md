@@ -535,34 +535,6 @@ ls -lh artifacts/
 dvc metrics show artifacts/config.json
 ```
 
-### Common DVC Commands
-
-```bash
-# Show pipeline stages and their status
-dvc stage list
-
-# Remove all outputs and cache
-dvc destroy
-
-# Show pipeline graph (text)
-dvc dag
-
-# Show pipeline graph (visual - requires graphviz)
-dvc dag --dot | dot -Tpng -o pipeline.png
-
-# Check if pipeline is up to date
-dvc status
-
-# Pull data from remote storage
-dvc pull
-
-# Push data to remote storage
-dvc push
-
-# Show differences between versions
-dvc diff
-```
-
 ### Testing the Pipeline
 
 #### Step-by-Step Test
@@ -602,84 +574,6 @@ Running stage 'model_training':
 Updating lock file 'dvc.lock'
 
 Pipeline stages executed successfully!
-```
-
-### Troubleshooting DVC
-
-#### Issue: "Stage is up to date"
-
-If DVC says a stage is up to date but you want to re-run:
-
-```bash
-# Force re-run
-dvc repro --force
-
-# Or remove the stage output first
-dvc remove <stage_name>.dvc
-dvc repro
-```
-
-#### Issue: "Dependencies changed"
-
-If you modified code but DVC doesn't detect it:
-
-```bash
-# Check what DVC thinks changed
-dvc status
-
-# Force re-run from a specific stage
-dvc repro --force model_training
-```
-
-#### Issue: "Missing dependencies"
-
-If a stage fails due to missing files:
-
-```bash
-# Check dependencies
-dvc dag
-
-# Ensure all dependencies exist
-ls data/raw/
-ls data/processed/
-```
-
-#### Clear DVC Cache
-
-```bash
-# Remove cache (keeps outputs)
-dvc cache dir
-
-# Clear specific cache
-dvc gc --workspace
-```
-
-### DVC Best Practices
-
-1. **Commit DVC files**: Always commit `dvc.yaml` and `dvc.lock` to Git
-2. **Use remote storage**: Set up remote storage for large files
-3. **Tag experiments**: Use Git tags with DVC to track experiments
-4. **Check status**: Run `dvc status` before committing changes
-5. **Document changes**: Update `dvc.yaml` when modifying pipeline
-
-### Example Workflow
-
-```bash
-# 1. Make changes to code
-vim src/components/model_trainer.py
-
-# 2. Check what needs to be re-run
-dvc status
-
-# 3. Re-run affected stages
-dvc repro model_training
-
-# 4. Verify outputs
-ls artifacts/
-
-# 5. Commit changes
-git add dvc.lock dvc.yaml
-git commit -m "Updated model training parameters"
 ```
 
 ### DVC Pipeline Visualization
