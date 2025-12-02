@@ -57,7 +57,7 @@ class ModelTrainer:
             
             return product_embeddings, tfidf, svd, product_info
         except Exception as e:
-            raise CustomException(f"Failed to create embeddings: {str(e)}", sys)
+            raise CustomException(f"Failed to create embeddings: {str(e)}")
     
     def build_faiss_index(self, embeddings):
         try:
@@ -67,7 +67,7 @@ class ModelTrainer:
             logger.info(f"FAISS index built: {index.ntotal:,} vectors")
             return index
         except Exception as e:
-            raise CustomException(f"Failed to build FAISS index: {str(e)}", sys)
+            raise CustomException(f"Failed to build FAISS index: {str(e)}")
     
     def train_als_model(self, train_matrix):
         try:
@@ -82,7 +82,7 @@ class ModelTrainer:
             logger.info("ALS model trained")
             return als_model
         except Exception as e:
-            raise CustomException(f"Failed to train ALS model: {str(e)}", sys)
+            raise CustomException(f"Failed to train ALS model: {str(e)}")
     
     def build_interaction_matrix(self, df, mappings, user_segment=None):
         try:
@@ -121,7 +121,7 @@ class ModelTrainer:
             logger.info(f"Interaction matrix: {matrix.shape}, Non-zero: {matrix.nnz:,}")
             return matrix, warm_user_info
         except Exception as e:
-            raise CustomException(f"Failed to build interaction matrix: {str(e)}", sys)
+            raise CustomException(f"Failed to build interaction matrix: {str(e)}")
     
     def build_product_user_lookup(self, interaction_matrix, mappings, products_with_embeddings=None):
         try:
@@ -146,5 +146,5 @@ class ModelTrainer:
             logger.info(f"Product-user lookup built: {len(product_to_users):,} products")
             return dict(product_to_users)
         except Exception as e:
-            raise CustomException(f"Failed to build product-user lookup: {str(e)}", sys)
+            raise CustomException(f"Failed to build product-user lookup: {str(e)}")
 

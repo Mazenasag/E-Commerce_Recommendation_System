@@ -67,14 +67,21 @@ class RecommenderService:
         if not self.artifacts_dir.exists():
             raise FileNotFoundError(
                 f"Artifacts directory '{self.artifacts_dir}' not found. "
-                "Please run the notebook to generate artifacts first."
+                "Please run the training pipeline first: python run_pipeline.py"
+            )
+        
+        als_model_path = self.artifacts_dir / 'als_model.pkl'
+        if not als_model_path.exists():
+            raise FileNotFoundError(
+                f"Artifacts not found in '{self.artifacts_dir}'. "
+                "Please run the training pipeline first: python run_pipeline.py"
             )
         
         print(f"📁 Loading artifacts from: {self.artifacts_dir}/")
         
         # 1. Load ALS model
         print("1️⃣ Loading ALS Model...")
-        with open(self.artifacts_dir / 'als_model.pkl', 'rb') as f:
+        with open(als_model_path, 'rb') as f:
             self.als_model = pickle.load(f)
         
         # 2. Load FAISS index

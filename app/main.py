@@ -91,15 +91,31 @@ async def startup_event():
         print("✅ All artifacts loaded successfully!")
         # Cache health stats after loading
         await cache_health_stats()
+    except FileNotFoundError as e:
+        logger.error(f"❌ Artifacts not found: {e}")
+        logger.error("⚠️  API will start but recommendations will not work until artifacts are generated.")
+        logger.error("💡 To generate artifacts, run: python run_pipeline.py")
+        # Don't raise - allow API to start but mark as not ready
+        recommender_service.loaded = False
     except Exception as e:
-        print(f"❌ Error loading artifacts: {e}")
-        raise
+        logger.error(f"❌ Error loading artifacts: {e}")
+        logger.error("⚠️  API will start but recommendations will not work.")
+        recommender_service.loaded = False
 
 # Health check endpoint (ultra-fast - returns cached stats)
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint - ultra-fast response with cached stats"""
     global _health_stats
+    
+    # Check if artifacts are loaded
+    if not recommender_service.loaded:
+        return HealthResponse(
+            status="degraded",
+            message="Service running but artifacts not loaded. Run training pipeline first.",
+            stats={"loaded": False, "artifacts_available": False}
+        )
+    
     try:
         # Use cached stats (computed at startup)
         if _health_stats is None:
@@ -113,9 +129,9 @@ async def health_check():
     except Exception as e:
         # Fallback to basic response if stats fail
         return HealthResponse(
-            status="healthy",
-            message="Recommendation service is running",
-            stats={"loaded": recommender_service.loaded}
+            status="degraded",
+            message="Service running but stats unavailable",
+            stats={"loaded": recommender_service.loaded, "error": str(e)}
         )
 
 # Get recommendations for a product
@@ -130,6 +146,12 @@ async def get_recommendations(request: RecommendationRequest):
     - 'hybrid': Combined ALS + content-based
     - 'popularity': Popularity-based baseline
     """
+    if not recommender_service.loaded:
+        raise HTTPException(
+            status_code=503,
+            detail="Artifacts not loaded. Please run the training pipeline first: python run_pipeline.py"
+        )
+    
     try:
         # Fast validation before processing (O(1) lookup)
         if request.product_id not in recommender_service._valid_product_ids:

@@ -89,7 +89,7 @@ class ModelEvaluator:
             
         except Exception as e:
             logger.error(f"Error in evaluation: {e}")
-            raise CustomException(f"Failed to evaluate model: {str(e)}", sys)
+            raise CustomException(f"Failed to evaluate model: {str(e)}")
     
     def print_evaluation_results(self, results: Dict):
         """Print evaluation results in a formatted way"""

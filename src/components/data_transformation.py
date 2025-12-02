@@ -31,7 +31,7 @@ class DataTransformation:
                 df = df.drop('index', axis=1)
             return df
         except Exception as e:
-            raise CustomException(f"Failed to clean data: {str(e)}", sys)
+            raise CustomException(f"Failed to clean data: {str(e)}")
     
     def normalize_units(self, text: str) -> str:
         """Normalize unit variations to standard form"""
@@ -61,7 +61,7 @@ class DataTransformation:
             df['cleaned_text'] = df['clean_words'].apply(lambda x: " ".join(x))
             return df
         except Exception as e:
-            raise CustomException(f"Failed to process product names: {str(e)}", sys)
+            raise CustomException(f"Failed to process product names: {str(e)}")
     
     def create_weighted_scores(self, df):
         try:
@@ -72,7 +72,7 @@ class DataTransformation:
             df['score'] = df['event_weight'] * df['recency_weight']
             return df
         except Exception as e:
-            raise CustomException(f"Failed to create weighted scores: {str(e)}", sys)
+            raise CustomException(f"Failed to create weighted scores: {str(e)}")
     
     def create_id_mappings(self, df):
         try:
@@ -91,7 +91,7 @@ class DataTransformation:
             logger.info(f"ID mappings: {mappings['n_users']:,} users, {mappings['n_products']:,} products")
             return mappings
         except Exception as e:
-            raise CustomException(f"Failed to create ID mappings: {str(e)}", sys)
+            raise CustomException(f"Failed to create ID mappings: {str(e)}")
     
     def identify_user_segments(self, df):
         try:
@@ -101,7 +101,7 @@ class DataTransformation:
             logger.info(f"User segments: {len(warm_users):,} warm, {len(cold_users):,} cold")
             return warm_users, cold_users
         except Exception as e:
-            raise CustomException(f"Failed to identify user segments: {str(e)}", sys)
+            raise CustomException(f"Failed to identify user segments: {str(e)}")
     
     def save_processed_data(self, df, output_path):
         try:
@@ -138,7 +138,7 @@ class DataTransformation:
             
             return df
         except Exception as e:
-            raise CustomException(f"Could not load processed data: {e}", sys)
+            raise CustomException(f"Could not load processed data: {e}")
 
 if __name__ == "__main__":
     import yaml

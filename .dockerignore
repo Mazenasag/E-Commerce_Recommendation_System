@@ -20,13 +20,14 @@ ENV/
 .ipynb_checkpoints/
 *.ipynb
 
-# Data (will be mounted as volumes)
+# Data
+# Only include the CSV needed for pipeline
 data/raw/*
+!data/raw/csv_for_case_study_V1.csv
 data/processed/*
-!data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# Artifacts (will be mounted as volumes)
+# Artifacts
 artifacts/*
 !artifacts/.gitkeep
 
@@ -63,4 +64,3 @@ Thumbs.db
 # DVC
 .dvc/
 .dvcignore
-

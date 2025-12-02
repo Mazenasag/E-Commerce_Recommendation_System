@@ -25,7 +25,7 @@ class DataIngestion:
             
             data_path = Path(self.raw_data_path)
             if not data_path.exists():
-                raise CustomException(f"Data file not found: {self.raw_data_path}", sys)
+                raise CustomException(f"Data file not found: {self.raw_data_path}")
 
             df = pd.read_csv(self.raw_data_path)
             
@@ -34,7 +34,7 @@ class DataIngestion:
             return df
 
         except Exception as e:
-            raise CustomException(f"Failed to load data: {e}", sys)
+            raise CustomException(f"Failed to load data: {e}")
 
     def validate_data(self, df: pd.DataFrame) -> bool:
         """Validate that required columns exist"""
@@ -42,13 +42,13 @@ class DataIngestion:
             required_columns = ['product_id', 'customer_id', 'product_name', 'Event_Date', 'Event']
             missing_columns = [col for col in required_columns if col not in df.columns]
             if missing_columns:
-                raise CustomException(f"Missing columns: {missing_columns}", sys)
+                raise CustomException(f"Missing columns: {missing_columns}")
 
             logger.info(" Data validation passed")
             return True
 
         except Exception as e:
-            raise CustomException(f"Data validation failed: {e}", sys)
+            raise CustomException(f"Data validation failed: {e}")
 if __name__ == "__main__":
     import yaml
 
