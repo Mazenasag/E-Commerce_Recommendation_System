@@ -34,6 +34,12 @@ docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
 
 </div>
 
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
+  <img src="assets/system_architecture.png" style="width: 45%; border-radius: 12px;" />
+  <img src="assets/workflow_diagram.png" style="width: 45%; border-radius: 12px;" />
+</div>
+
+
 ## 📋 Table of Contents
 
 - [Quick Start](#-quick-start)
