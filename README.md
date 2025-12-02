@@ -1,6 +1,38 @@
+<div align="center">
+
 # 🎯 E-Commerce Recommendation System
 
-A production-ready hybrid recommendation system that combines collaborative filtering (ALS) and content-based filtering (TF-IDF + SVD) to provide product-to-user recommendations for e-commerce platforms.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green.svg)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+**A production-ready hybrid recommendation system that combines collaborative filtering (ALS) and content-based filtering (TF-IDF + SVD) to provide product-to-user recommendations for e-commerce platforms.**
+
+---
+
+### 🚀 Quick Start with Docker Hub
+
+```bash
+# Pull the pre-built image from Docker Hub
+docker pull mazenasag/ecommerce-recommender:latest
+
+# Run the API server with volume mounts
+docker run -d -p 8000:8000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/artifacts:/app/artifacts \
+  mazenasag/ecommerce-recommender:latest
+
+# Access the API
+# - API Docs: http://localhost:8000/docs
+# - Web UI: http://localhost:8000/static/index.html
+```
+
+**📦 Docker Image:** `mazenasag/ecommerce-recommender:latest`
+
+---
+
+</div>
 
 ## 📋 Table of Contents
 
@@ -64,6 +96,14 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ### 6. Docker (Alternative)
 
 ```bash
+# Pull and run pre-built image
+docker pull mazenasag/ecommerce-recommender:latest
+docker run -d -p 8000:8000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/artifacts:/app/artifacts \
+  mazenasag/ecommerce-recommender:latest
+
+# Or use docker-compose
 docker-compose up -d
 ```
 
@@ -237,9 +277,9 @@ E-Commerce_Recommendation_System/
 │   └── test_model_trainer.py
 │
 ├── EDA_and_notebooks_trails/    # Jupyter notebooks
-│   ├── eda.ipynb                # Exploratory data analysis
-│   ├── data_preprocessing.ipynb  # Data preprocessing
-│   └── model_build.ipynb        # Model development
+│   ├── [eda.ipynb](EDA_and_notebooks_trails/eda.ipynb)                # Exploratory data analysis
+│   ├── [data_preprocessing.ipynb](EDA_and_notebooks_trails/data_preprocessing.ipynb)  # Data preprocessing
+│   └── [model_build.ipynb](EDA_and_notebooks_trails/model_build.ipynb)        # Model development
 │
 ├── logs/                        # Application logs
 ├── reports/                     # Test reports
@@ -749,10 +789,52 @@ Visit http://localhost:8000/docs for Swagger UI with interactive testing.
 
 ## 🐳 Docker Deployment
 
-### Build Docker Image
+### Option 1: Pull Pre-built Image from Docker Hub (Recommended)
 
 ```bash
-# Build image
+# Pull the latest image
+docker pull mazenasag/ecommerce-recommender:latest
+
+# Run the API server
+docker run -d -p 8000:8000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/artifacts:/app/artifacts \
+  --name ecommerce-recommender \
+  mazenasag/ecommerce-recommender:latest
+
+# View logs
+docker logs -f ecommerce-recommender
+
+# Stop container
+docker stop ecommerce-recommender
+```
+
+### Option 2: Generate Artifacts Inside Container
+
+If you need to train the model inside the container:
+
+```bash
+# Pull image
+docker pull mazenasag/ecommerce-recommender:latest
+
+# Run training pipeline (mount data directory)
+docker run -it --rm \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/artifacts:/app/artifacts \
+  mazenasag/ecommerce-recommender:latest \
+  python run_pipeline.py
+
+# Then start the API
+docker run -d -p 8000:8000 \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/artifacts:/app/artifacts \
+  mazenasag/ecommerce-recommender:latest
+```
+
+### Option 3: Build from Source
+
+```bash
+# Build image locally
 docker build -t ecommerce-recommender:latest .
 
 # Or using docker-compose
@@ -949,5 +1031,5 @@ For questions or issues, please open an issue on GitHub.
 
 ---
 
-**Built with ❤️ for E-Commerce Recommendation Systems**
+**Mazen Asag**
 
