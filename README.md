@@ -288,10 +288,10 @@ E-Commerce_Recommendation_System/
 │   ├── test_data_transformation.py
 │   └── test_model_trainer.py
 │
-├── EDA_and_notebooks_trails/    # Jupyter notebooks
-│   ├── [eda.ipynb](EDA_and_notebooks_trails/eda.ipynb)                # Exploratory data analysis
-│   ├── [data_preprocessing.ipynb](EDA_and_notebooks_trails/data_preprocessing.ipynb)  # Data preprocessing
-│   └── [model_build.ipynb](EDA_and_notebooks_trails/model_build.ipynb)        # Model development
+├── EDA_and_notebooks_trails/   # Jupyter notebooks
+│   ├── [eda.ipynb]             # Exploratory data analysis
+│   ├── [data_preprocessing.ipynb] # Data preprocessing
+│   └── [model_build.ipynb]       # Model development
 │
 ├── logs/                        # Application logs
 ├── reports/                     # Test reports
@@ -302,7 +302,7 @@ E-Commerce_Recommendation_System/
 ├── dvc.yaml                     # DVC pipeline configuration
 ├── Dockerfile                    # Docker image definition
 ├── docker-compose.yml           # Docker Compose configuration
-└── README.md                    # This file
+└── README.md                   
 ```
 
 ##  Installation
