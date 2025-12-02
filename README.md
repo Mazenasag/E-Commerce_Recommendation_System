@@ -41,8 +41,9 @@ docker run -d -p 8000:8000 mazenasag/ecommerce-recommender:latest
   
   
 </div>
+
 You can view the interactive page here:  
-[E-Commerce Recommendation System](E-Commerce%20Recommendation%20System.html)
+[E-Commerce Recommendation System](https://Mazenasag.github.io/E-Commerce_Recommendation_System/E-Commerce%20Recommendation%20System.html)
 
 
 ## 📋 Table of Contents
